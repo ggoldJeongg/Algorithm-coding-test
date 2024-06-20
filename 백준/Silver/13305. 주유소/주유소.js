@@ -1,17 +1,24 @@
 let fs = require('fs');
-let data = fs.readFileSync('/dev/stdin').toString().split("\n");
+let data = fs.readFileSync('/dev/stdin').toString().split('\n');
 
-let N = Number(data[0]);
-let roadDistance = data[1].split(" ").map(Number);
-let oilPrice = data[2].split(" ").map(Number);
+let N = BigInt(data[0]);
+let roadDistance = data[1].split(" ").map(BigInt);
+let oilPrice = data[2].split(" ").map(BigInt);
 
-let totalCost = 0;
-let minPrice = oilPrice[0];
+let isAllPricesOne = oilPrice.every(price => price === 1n);
 
-for (let i = 0; i < N -1; i++) {
-  if (oilPrice[i] < minPrice) {
-    minPrice = oilPrice[i];
-  }
-  totalCost += minPrice *roadDistance[i];
+let totalCost = 0n;
+
+if (isAllPricesOne) {
+    totalCost = roadDistance.reduce((acc, cur) => acc + cur, 0n);
+} else {
+    let minPrice = oilPrice[0];
+    for (let i = 0n; i < N - 1n; i++) {
+        if (oilPrice[i] < minPrice) {
+            minPrice = oilPrice[i];
+        }
+        totalCost += minPrice * roadDistance[i];
+    }
 }
-console.log(totalCost);
+
+console.log(totalCost.toString());
